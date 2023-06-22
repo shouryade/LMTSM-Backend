@@ -18,6 +18,10 @@ class TripCompleteRequest(BaseModel):
     trip_id: Optional[str] = None
     start: int
     end: int
+    inTime: str
+    inDate: str
+    outTime: str
+    outDate: str
 
     class Config:
         orm_mode = True

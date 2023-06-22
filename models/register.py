@@ -60,3 +60,7 @@ class Booking(BaseModel):
 
     meter_reading_total: Optional[float] = None
     rate_per_km: Optional[float] = None
+    inTime: Optional[str] = None
+    inDate: Optional[str] = None
+    outTime: Optional[str] = None
+    outDate: Optional[str] = None

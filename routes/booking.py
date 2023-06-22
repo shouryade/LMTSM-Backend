@@ -167,6 +167,10 @@ async def complete_trip(
                 "trip_completed": True,
                 "trip_ID": req.trip_id,
                 "meter_reading_total": req.end - req.start,
+                "In Date": req.inDate,
+                "In Time": req.inTime,
+                "Out Date": req.outDate,
+                "Out Time": req.outTime,
                 "rate_per_km": req.total / (req.end - req.start),
             }
         },
