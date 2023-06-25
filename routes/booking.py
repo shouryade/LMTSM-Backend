@@ -9,7 +9,9 @@ from utils import get_current_user
 from typing import List, Annotated
 from bson import ObjectId
 from datetime import date
+from fastapi.responses import FileResponse
 
+import pandas as pd
 import models.requestmodel as requestmodel
 
 
@@ -214,3 +216,30 @@ def get_duty_slips(current_user: registerUser = Depends(get_current_user)):
         duty_slips.append(duty_slip)
 
     return duty_slips
+
+
+def flatten_booking(booking):
+    booking.update(booking.pop("particulars"))
+    return booking
+
+
+@router.get("/download")
+def get_duty_slips(current_user: registerUser = Depends(get_current_user)):
+    if current_user["role"] not in {"admin", "super_admin"}:
+        raise HTTPException(status_code=403, detail="Forbidden")
+    documents = collection_booking.find({"trip_completed": True})
+    flattened_bookings = map(flatten_booking, documents)
+
+    df = pd.DataFrame(list(flattened_bookings))
+    today = date.today()
+    d4 = today.strftime("%b-%d-%Y")
+
+    filename = "files/{}-exported.xlsx".format(d4)
+
+    writer = pd.ExcelWriter(filename, engine="xlsxwriter")
+
+    df.to_excel(writer, index=False)
+
+    writer.close()
+
+    return FileResponse(path=filename)

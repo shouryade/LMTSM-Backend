@@ -9,8 +9,6 @@ from datetime import date
 import pydantic
 from bson.objectid import ObjectId
 
-pydantic.json.ENCODERS_BY_TYPE[ObjectId] = str
-
 
 router = APIRouter(prefix="/v1/admin", tags=["roles"])
 
@@ -43,7 +41,9 @@ async def approve_roles(
     if role not in {"super_admin", "admin"}:
         raise HTTPException(status_code=406, detail="Select a valid role")
 
-    result = user_collection.update_one({"_id": ObjectId(id)}, {"$set": {"role": role}})
+    result = user_collection.update_one(
+        {"_id": str(ObjectId(id))}, {"$set": {"role": role}}
+    )
 
     if result.modified_count == 0:
         raise HTTPException(
@@ -61,7 +61,7 @@ async def revoke_role(
         raise HTTPException(status_code=403, detail="Forbidden")
 
     result = user_collection.update_one(
-        {"_id": ObjectId(id)}, {"$set": {"role": "user"}}
+        {"_id": str(ObjectId(id))}, {"$set": {"role": "user"}}
     )
 
     if result.modified_count == 0:
