@@ -7,7 +7,7 @@ from utils import get_current_user
 from typing import List, Annotated
 from datetime import date
 import pydantic
-from bson.objectid import ObjectId
+from bson import ObjectId
 
 
 router = APIRouter(prefix="/v1/admin", tags=["roles"])
@@ -20,7 +20,7 @@ async def get_roles(
     if current_user["role"] != "super_admin":
         raise HTTPException(status_code=403, detail="Forbidden")
 
-    results = user_collection.find({"des": "staff"})
+    results = user_collection.find({"des": "staff"}, {"_id": 0})
 
     res = []
 

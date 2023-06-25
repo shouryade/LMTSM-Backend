@@ -169,10 +169,10 @@ async def complete_trip(
                 "trip_completed": True,
                 "trip_ID": req.trip_id,
                 "meter_reading_total": req.end - req.start,
-                "In Date": req.inDate,
-                "In Time": req.inTime,
-                "Out Date": req.outDate,
-                "Out Time": req.outTime,
+                "inDate": req.inDate,
+                "inTime": req.inTime,
+                "outDate": req.outDate,
+                "outTime": req.outTime,
                 "rate_per_km": req.total / (req.end - req.start),
             }
         },
@@ -234,12 +234,18 @@ def get_duty_slips(current_user: registerUser = Depends(get_current_user)):
     today = date.today()
     d4 = today.strftime("%b-%d-%Y")
 
-    filename = "files/{}-exported.xlsx".format(d4)
+    filename = "{}-exported.xlsx".format(d4)
+    filepath = "files/{}-exported.xlsx".format(d4)
 
-    writer = pd.ExcelWriter(filename, engine="xlsxwriter")
+    writer = pd.ExcelWriter(filepath, engine="xlsxwriter")
 
     df.to_excel(writer, index=False)
 
     writer.close()
 
-    return FileResponse(path=filename)
+    headers = {
+        "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "Content-Disposition": "attachment; filename={}".format(filename),
+    }
+
+    return FileResponse(path=filepath, headers=headers)
