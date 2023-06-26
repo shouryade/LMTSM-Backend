@@ -20,11 +20,12 @@ async def get_roles(
     if current_user["role"] != "super_admin":
         raise HTTPException(status_code=403, detail="Forbidden")
 
-    results = user_collection.find({"des": "staff"}, {"_id": 0})
+    results = user_collection.find({"des": "staff"})
 
     res = []
 
     for result in results:
+        result["_id"] = str(result["_id"])
         res.append(result)
 
     return res
@@ -41,9 +42,7 @@ async def approve_roles(
     if role not in {"super_admin", "admin"}:
         raise HTTPException(status_code=406, detail="Select a valid role")
 
-    result = user_collection.update_one(
-        {"_id": str(ObjectId(id))}, {"$set": {"role": role}}
-    )
+    result = user_collection.update_one({"_id": ObjectId(id)}, {"$set": {"role": role}})
 
     if result.modified_count == 0:
         raise HTTPException(
@@ -55,13 +54,14 @@ async def approve_roles(
 @router.delete("/approve/{id}")
 async def revoke_role(
     id: str,
+    role: str,
     current_user: registerUser = Depends(get_current_user),
 ):
     if current_user["role"] != "super_admin":
         raise HTTPException(status_code=403, detail="Forbidden")
 
     result = user_collection.update_one(
-        {"_id": str(ObjectId(id))}, {"$set": {"role": "user"}}
+        {"_id": ObjectId(id)}, {"$set": {"role": "user"}}
     )
 
     if result.modified_count == 0:
