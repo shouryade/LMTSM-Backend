@@ -1,0 +1,19 @@
+version: "3.8"
+
+services:
+    api:
+        build: .
+        ports: 
+            - 8100:8100
+        environment:
+            - MONGODB_CONNECTION_URI=mongodb://db/main_db
+        volumes:
+            - .:/app
+    db:
+        image: mongo
+        ports:
+            - 27017:27017
+        volumes:
+            - taskdb:/data/db
+volumes:
+    taskdb:
