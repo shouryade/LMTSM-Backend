@@ -39,3 +39,14 @@
 
 You can access the documentation of the backend by visiting http://localhost:8100/docs
 You can also try out the API endpoints by first authenticating and creating a user and setting their role to `super_admin` (using MongoDB Compass) and then using the `Try it out` button to make requests to the API.
+
+## Production Setup
+
+Make sure you have docker and docker-compose and you are added in the docker user group.
+Run the following command to start the containers and setup volumes.
+
+```sh
+docker-compose -f docker-compose-prod.yml up -d
+```
+
+Execute `docker ps` to know the uptime and other details regarding the containers.
