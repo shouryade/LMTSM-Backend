@@ -4,8 +4,8 @@ from config.db import db_ping
 from fastapi.middleware.cors import CORSMiddleware
 
 
-app = FastAPI(title="ReviewViz")
-origins = ["http://localhost:5173", "*"]
+app = FastAPI(title="LMTSM Website")
+origins = ["*"]
 
 app.add_middleware(
     CORSMiddleware,
