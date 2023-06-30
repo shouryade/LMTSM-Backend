@@ -57,7 +57,10 @@ async def get_booking_status(
 ):
     today = date.today()
     results = collection_booking.find(
-        {"user_id": current_user["email"], "particulars.date": {"$gte": str(today)}}
+        {
+            "user_id": current_user["email"],
+            "particulars.startDate": {"$gte": str(today)},
+        }
     )
     bookings = []
 

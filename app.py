@@ -33,5 +33,5 @@ async def hello():
     return {"msg": "hello from the backend!"}
 
 
-# if __name__ == "__main__":
-#     uvicorn.run("app:app", reload=True, host="127.0.0.1", port=8100)
+if __name__ == "__main__":
+    uvicorn.run("app:app", reload=True, host="127.0.0.1", port=8100)

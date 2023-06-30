@@ -18,24 +18,13 @@ class registerUser(BaseModel):
 
 class BookingRequest(BaseModel):
     name: str
-    date: str
+    startDate: str
+    endDate: str
     time: str
     place_of_visit: str
     purpose: str
     num_people: str
     chargeable_head: Optional[str] = None
-
-    @validator("date")
-    def date_not_past(cls, v):
-        if v < str(date.today()):
-            raise ValidationError("Date must not be a past date")
-        return v
-
-    @validator("num_people")
-    def num_people_validator(cls, value):
-        if int(value) <= 0:
-            raise ValidationError("number of people must be greater than 0")
-        return value
 
 
 class Booking(BaseModel):
