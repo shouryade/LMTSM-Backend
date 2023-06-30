@@ -24,6 +24,7 @@ class BookingRequest(BaseModel):
     place_of_visit: str
     purpose: str
     num_people: str
+    reason: str
     chargeable_head: Optional[str] = None
 
 
