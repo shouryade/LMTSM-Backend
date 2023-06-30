@@ -100,12 +100,17 @@ async def approve_booking(
 
 
 @router.delete("/approve/{id}")
-async def delete_booking(id: str, user: registerUser = Depends(get_current_user)):
+async def delete_booking(
+    id: str,
+    data: dict,
+    user: registerUser = Depends(get_current_user),
+):
     if user["role"] != "super_admin":
         raise HTTPException(status_code=403, detail="Forbidden")
 
     result = collection_booking.update_one(
-        {"_id": str(ObjectId(id))}, {"$set": {"status": "Rejected"}}
+        {"_id": str(ObjectId(id))},
+        {"$set": {"status": "Rejected", "reason": data["reason"]}},
     )
     if result.modified_count == 0:
         raise HTTPException(status_code=404, detail="Booking not found")
